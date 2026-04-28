@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NGO Registration — BridgeConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--ink:#0e0e0e;--cream:#faf7f2;--accent:#c8622a;--green:#2d6a4f;--muted:#7a7060;--border:#ddd5c4;--card-bg:#ffffff;--red:#b91c1c}
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 5vw;background:rgba(245,240,232,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--ink);text-decoration:none}.nav-logo span{color:var(--accent)}
+    .nav-back{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--muted);text-decoration:none}.nav-back:hover{color:var(--ink)}
+    main{flex:1;padding:3rem 5vw;display:flex;flex-direction:column;align-items:center}
+    .ph{text-align:center;margin-bottom:2.5rem;animation:fadeUp 0.5s ease both}
+    .ph-tag{font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);margin-bottom:0.5rem}
+    .ph-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;letter-spacing:-0.5px}
+    .ph-sub{color:var(--muted);font-size:0.9rem;margin-top:0.4rem}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .stepper{display:flex;align-items:center;max-width:600px;width:100%;margin:0 auto 2.5rem}
+    .stp{display:flex;flex-direction:column;align-items:center;gap:0.4rem;flex:1;position:relative}
+    .stp-c{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;border:2px solid var(--border);background:var(--cream);color:var(--muted);transition:all 0.3s;z-index:1}
+    .stp.active .stp-c,.stp.done .stp-c{background:var(--green);border-color:var(--green);color:#fff}
+    .stp-l{font-size:0.72rem;color:var(--muted);font-weight:500;text-align:center}
+    .stp.active .stp-l{color:var(--green);font-weight:600}
+    .stp-line{flex:1;height:2px;background:var(--border);margin-top:-1.8rem;transition:background 0.3s}
+    .stp-line.done{background:var(--green)}
+    .card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:20px;padding:2.5rem;max-width:680px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,0.06)}
+    .panel{display:none}.panel.active{display:block}
+    .p-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:0.3rem}
+    .p-sub{font-size:0.84rem;color:var(--muted);margin-bottom:1.8rem}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .fg{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem}
+    label{font-size:0.75rem;font-weight:500;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase}
+    input,select,textarea{background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:0.75rem 1rem;font-size:0.9rem;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%}
+    input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,79,0.1)}
+    textarea{resize:vertical;min-height:90px}
+    select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7060' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+    .cause-grid{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.3rem}
+    .chip{padding:0.4rem 0.9rem;border-radius:100px;border:1.5px solid var(--border);font-size:0.8rem;cursor:pointer;transition:all 0.2s;background:var(--cream);color:var(--muted);user-select:none}
+    .chip.sel{background:var(--green);border-color:var(--green);color:#fff}
+    .doc-item{background:var(--cream);border:1.5px solid var(--border);border-radius:12px;padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem}
+    .di-name{font-size:0.88rem;font-weight:500}
+    .di-desc{font-size:0.75rem;color:var(--muted);margin-top:0.1rem}
+    .di-check{display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;color:var(--muted);cursor:pointer;text-transform:none;letter-spacing:0;font-size:0.82rem}
+    .di-check input{width:16px;height:16px;cursor:pointer}
+    .rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:0.5rem}
+    .rv-label{font-size:0.72rem;color:var(--muted)}
+    .rv-value{font-size:0.88rem;font-weight:500;margin-top:0.1rem}
+    .rv-sec{font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin:1.2rem 0 0.75rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+    .err{background:rgba(185,28,28,0.08);border:1px solid rgba(185,28,28,0.2);color:var(--red);border-radius:10px;padding:0.75rem 1rem;font-size:0.82rem;margin-bottom:1rem;display:none}
+    .err.show{display:block}
+    .actions{display:flex;gap:1rem;margin-top:2rem}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:0.85rem 1.8rem;border-radius:100px;font-size:0.88rem;font-weight:500;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;transition:opacity 0.2s}
+    .btn-g{background:var(--green);color:#fff;box-shadow:0 4px 16px rgba(45,106,79,0.22)}.btn-g:hover{opacity:0.88}.btn-g:disabled{opacity:0.6;cursor:not-allowed}
+    .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--border)}.btn-ghost:hover{border-color:var(--ink)}
+    footer{background:var(--ink);color:rgba(245,240,232,0.4);padding:1.5rem 5vw;display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;flex-wrap:wrap;gap:0.5rem}
+    .footer-logo{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);text-decoration:none}.footer-logo span{color:var(--accent)}
+    @media(max-width:600px){.row2{grid-template-columns:1fr}.rv-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Bridge<span>Connect</span></a>
+    <a href="login.html" class="nav-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back to Login</a>
+  </nav>
+  <main>
+    <div class="ph"><div class="ph-tag">NGO Registration</div><div class="ph-title">Register Your Organisation</div><div class="ph-sub">4-step form to apply for verification on BridgeConnect</div></div>
+    <div class="stepper">
+      <div class="stp active" id="s1"><div class="stp-c">1</div><div class="stp-l">Basic Info</div></div>
+      <div class="stp-line" id="l1"></div>
+      <div class="stp" id="s2"><div class="stp-c">2</div><div class="stp-l">Documents</div></div>
+      <div class="stp-line" id="l2"></div>
+      <div class="stp" id="s3"><div class="stp-c">3</div><div class="stp-l">Bank Details</div></div>
+      <div class="stp-line" id="l3"></div>
+      <div class="stp" id="s4"><div class="stp-c">4</div><div class="stp-l">Review</div></div>
+    </div>
+    <div class="card">
+      <div class="err" id="err"></div>
+
+      <!-- Step 1 -->
+      <div class="panel active" id="p1">
+        <div class="p-title">Basic Information</div><div class="p-sub">Tell us about your organisation</div>
+        <div class="fg"><label>NGO Name</label><input type="text" id="n-name" placeholder="e.g. Udayan Care Foundation"/></div>
+        <div class="fg"><label>Email Address</label><input type="email" id="n-email" placeholder="contact@yourNGO.org"/></div>
+        <div class="row2">
+          <div class="fg"><label>Password</label><input type="password" id="n-pw" placeholder="Min. 8 characters"/></div>
+          <div class="fg"><label>Confirm Password</label><input type="password" id="n-cpw" placeholder="Repeat password"/></div>
+        </div>
+        <div class="fg"><label>Address</label><input type="text" id="n-addr" placeholder="Street address"/></div>
+        <div class="row2">
+          <div class="fg"><label>City</label><input type="text" id="n-city" placeholder="Mumbai"/></div>
+          <div class="fg"><label>State</label><select id="n-state"><option value="">Select state</option><option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option><option>Delhi</option><option>Gujarat</option><option>Haryana</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Punjab</option><option>Rajasthan</option><option>Tamil Nadu</option><option>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option></select></div>
+        </div>
+        <div class="fg"><label>Pincode</label><input type="text" id="n-pin" placeholder="400001" maxlength="6"/></div>
+        <div class="fg">
+          <label>Cause Category <span style="font-weight:400;font-size:0.7rem;color:var(--muted);text-transform:none">(select all that apply)</span></label>
+          <div class="cause-grid">
+            <div class="chip" onclick="this.classList.toggle('sel')">Education</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Healthcare</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Child Welfare</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Women Empowerment</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Environment</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Disaster Relief</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Animal Welfare</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Rural Development</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Elderly Care</div>
+            <div class="chip" onclick="this.classList.toggle('sel')">Disability Support</div>
+          </div>
+        </div>
+        <div class="fg"><label>Description</label><textarea id="n-desc" placeholder="Brief description of your organisation's mission and work..."></textarea></div>
+        <div class="actions"><button class="btn btn-g" style="width:100%" onclick="next(1)">Continue to Documents</button></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="panel" id="p2">
+        <div class="p-title">Legal Documents</div><div class="p-sub">Confirm which documents your organisation holds. Admin will verify before approval.</div>
+        <div class="doc-item"><div><div class="di-name">Registration Certificate</div><div class="di-desc">Societies Act / Trust Act / Companies Act</div></div><label class="di-check"><input type="checkbox" id="d0"> Have this</label></div>
+        <div class="doc-item"><div><div class="di-name">80G Certificate</div><div class="di-desc">Tax exemption certificate for donor deductions</div></div><label class="di-check"><input type="checkbox" id="d1"> Have this</label></div>
+        <div class="doc-item"><div><div class="di-name">12A Certificate</div><div class="di-desc">Income tax exemption for the NGO</div></div><label class="di-check"><input type="checkbox" id="d2"> Have this</label></div>
+        <div class="doc-item"><div><div class="di-name">PAN Card</div><div class="di-desc">Organisation's PAN card</div></div><label class="di-check"><input type="checkbox" id="d3"> Have this</label></div>
+        <div class="doc-item"><div><div class="di-name">FCRA Certificate <span style="font-size:0.7rem;color:var(--muted)">(optional)</span></div><div class="di-desc">Foreign Contribution Regulation Act</div></div><label class="di-check"><input type="checkbox" id="d4"> Have this</label></div>
+        <div class="doc-item"><div><div class="di-name">Representative ID Proof</div><div class="di-desc">Aadhaar / Passport / Voter ID</div></div><label class="di-check"><input type="checkbox" id="d5"> Have this</label></div>
+        <div class="actions"><button class="btn btn-ghost" onclick="prev(2)">Back</button><button class="btn btn-g" style="flex:1" onclick="next(2)">Continue to Bank Details</button></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="panel" id="p3">
+        <div class="p-title">Bank Details</div><div class="p-sub">Where should donations be transferred?</div>
+        <div class="fg"><label>Account Number</label><input type="text" id="b-acc" placeholder="Enter account number"/></div>
+        <div class="fg"><label>Confirm Account Number</label><input type="text" id="b-cacc" placeholder="Re-enter account number"/></div>
+        <div class="row2">
+          <div class="fg"><label>IFSC Code</label><input type="text" id="b-ifsc" placeholder="e.g. SBIN0001234" maxlength="11"/></div>
+          <div class="fg"><label>Bank Name</label><input type="text" id="b-bank" placeholder="e.g. State Bank of India"/></div>
+        </div>
+        <div class="actions"><button class="btn btn-ghost" onclick="prev(3)">Back</button><button class="btn btn-g" style="flex:1" onclick="next(3)">Review Application</button></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="panel" id="p4">
+        <div class="p-title">Review & Submit</div><div class="p-sub">Please review before submitting</div>
+        <div class="rv-sec">Basic Information</div><div class="rv-grid" id="rv-basic"></div>
+        <div class="rv-sec">Bank Details</div><div class="rv-grid" id="rv-bank"></div>
+        <div style="background:rgba(45,106,79,0.06);border:1px solid rgba(45,106,79,0.15);border-radius:12px;padding:1rem 1.2rem;font-size:0.82rem;color:var(--muted);line-height:1.6;margin:1rem 0">
+          By submitting, you confirm all information is accurate. Your application will be reviewed within 2–3 business days.
+        </div>
+        <div class="actions"><button class="btn btn-ghost" onclick="prev(4)">Back</button><button class="btn btn-g" style="flex:1" id="sub-btn" onclick="submit()">Submit Application</button></div>
+      </div>
+    </div>
+  </main>
+  <footer><a href="index.html" class="footer-logo">Bridge<span>Connect</span></a><div>© 2025 BridgeConnect.</div><div>Built for India's giving ecosystem</div></footer>
+
+  <script type="module">
+    import { initializeApp }                           from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc }               from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const app  = initializeApp({apiKey:"AIzaSyBD5RY0C6sNtECrPAdris3Bk2a-zkywjwg",authDomain:"bridgeconnect-df65b.firebaseapp.com",projectId:"bridgeconnect-df65b",storageBucket:"bridgeconnect-df65b.firebasestorage.app",messagingSenderId:"141713664963",appId:"1:141713664963:web:a13d8df1ec7daf0e6a6b76"});
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    let cur = 1;
+    const g = id => document.getElementById(id);
+    const errEl = g('err');
+
+    function showErr(m){errEl.textContent=m;errEl.classList.add('show');errEl.scrollIntoView({behavior:'smooth',block:'nearest'})}
+    function clearErr(){errEl.classList.remove('show')}
+
+    window.next = function(from) {
+      clearErr();
+      if (from===1) {
+        const name=g('n-name').value.trim(),email=g('n-email').value.trim(),pw=g('n-pw').value,cpw=g('n-cpw').value,city=g('n-city').value.trim(),state=g('n-state').value,desc=g('n-desc').value.trim();
+        const causes=[...document.querySelectorAll('.chip.sel')].map(c=>c.textContent);
+        if(!name||!email||!pw||!city||!state||!desc){showErr('Please fill in all required fields.');return}
+        if(pw.length<8){showErr('Password must be at least 8 characters.');return}
+        if(pw!==cpw){showErr('Passwords do not match.');return}
+        if(!causes.length){showErr('Please select at least one cause category.');return}
+      }
+      if (from===2) {
+        if(![0,1,2,3,5].every(i=>g('d'+i).checked)){showErr('Please confirm you have all required documents (FCRA is optional).');return}
+      }
+      if (from===3) {
+        const acc=g('b-acc').value.trim(),cacc=g('b-cacc').value.trim(),ifsc=g('b-ifsc').value.trim(),bank=g('b-bank').value.trim();
+        if(!acc||!ifsc||!bank){showErr('Please fill in all bank details.');return}
+        if(acc!==cacc){showErr('Account numbers do not match.');return}
+        buildReview();
+      }
+      goTo(from+1);
+    };
+
+    window.prev = from => { clearErr(); goTo(from-1); };
+
+    function goTo(step) {
+      g('p'+cur).classList.remove('active');
+      g('s'+cur).classList.remove('active');
+      if(cur<step) g('s'+cur).classList.add('done');
+      [1,2,3].forEach(i=>g('l'+i).classList.toggle('done',i<step));
+      cur=step;
+      g('p'+step).classList.add('active');
+      g('s'+step).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function buildReview() {
+      const causes=[...document.querySelectorAll('.chip.sel')].map(c=>c.textContent).join(', ');
+      const basic={Name:g('n-name').value,Email:g('n-email').value,City:g('n-city').value,State:g('n-state').value,Causes:causes};
+      g('rv-basic').innerHTML=Object.entries(basic).map(([k,v])=>`<div><div class="rv-label">${k}</div><div class="rv-value">${v||'—'}</div></div>`).join('');
+      const bank={'Account No':'••••'+g('b-acc').value.slice(-4),'IFSC':g('b-ifsc').value,'Bank':g('b-bank').value};
+      g('rv-bank').innerHTML=Object.entries(bank).map(([k,v])=>`<div><div class="rv-label">${k}</div><div class="rv-value">${v||'—'}</div></div>`).join('');
+    }
+
+    window.submit = async function() {
+      clearErr();
+      const btn=g('sub-btn');
+      btn.disabled=true;btn.textContent='Submitting...';
+      const data={
+        role:'ngo',
+        name:g('n-name').value.trim(),
+        email:g('n-email').value.trim(),
+        city:g('n-city').value.trim(),
+        state:g('n-state').value,
+        address:g('n-addr').value.trim(),
+        pincode:g('n-pin').value.trim(),
+        cause:[...document.querySelectorAll('.chip.sel')].map(c=>c.textContent),
+        description:g('n-desc').value.trim(),
+        documents:{regCert:g('d0').checked,cert80G:g('d1').checked,cert12A:g('d2').checked,pan:g('d3').checked,fcra:g('d4').checked,idProof:g('d5').checked},
+        bankDetails:{accountNo:g('b-acc').value.trim(),ifsc:g('b-ifsc').value.trim(),bankName:g('b-bank').value.trim()},
+        status:'pending',
+        rejectionReason:'',
+        totalRaised:0,
+        createdAt:new Date().toISOString()
+      };
+      try {
+        const cred=await createUserWithEmailAndPassword(auth,data.email,g('n-pw').value);
+        await setDoc(doc(db,'users',cred.user.uid),data);
+        document.querySelector('.card').innerHTML=`<div style="text-align:center;padding:2rem 0"><div style="width:64px;height:64px;border-radius:50%;background:rgba(45,106,79,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.5rem">Application Submitted</div><div style="color:var(--muted);font-size:0.9rem;line-height:1.65;max-width:380px;margin:0 auto 2rem">Thank you, <strong>${data.name}</strong>. Your application is under review. You will be notified once approved.</div><a href="index.html" style="display:inline-flex;background:var(--green);color:#fff;padding:0.8rem 2rem;border-radius:100px;text-decoration:none;font-size:0.9rem;font-weight:500">Back to Home</a></div>`;
+      } catch(e) {
+        const map={'auth/email-already-in-use':'An NGO with this email is already registered.'};
+        showErr(map[e.code]||e.message);
+        btn.disabled=false;btn.textContent='Submit Application';
+      }
+    };
+  </script>
+</body>
+</html>

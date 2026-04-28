@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGO Profile — BridgeConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0e0e0e; --paper: #f5f0e8; --cream: #faf7f2;
+      --accent: #c8622a; --green: #2d6a4f; --green-light: #52b788;
+      --muted: #7a7060; --border: #ddd5c4; --card-bg: #ffffff;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 5vw; background: var(--card-bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: var(--ink); text-decoration: none; }
+    .nav-logo span { color: var(--accent); }
+    .nav-back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--ink); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* PROFILE HEADER */
+    .profile-hero { background: var(--ink); padding: 3rem 5vw; color: var(--cream); }
+    .ph-inner { max-width: 1000px; margin: 0 auto; display: flex; align-items: flex-start; gap: 2rem; }
+    .ph-initials { width: 72px; height: 72px; border-radius: 18px; background: rgba(245,240,232,0.1); display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--cream); flex-shrink: 0; }
+    .ph-info { flex: 1; }
+    .ph-badges { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .ph-badge { font-size: 0.7rem; font-weight: 600; padding: 0.22rem 0.7rem; border-radius: 100px; letter-spacing: 0.03em; }
+    .ph-badge-green { background: rgba(82,183,136,0.2); color: var(--green-light); }
+    .ph-badge-orange { background: rgba(200,98,42,0.2); color: #e8895a; }
+    .ph-name { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 0.4rem; }
+    .ph-location { font-size: 0.85rem; color: rgba(245,240,232,0.5); }
+    .ph-donate-btn { align-self: center; flex-shrink: 0; }
+
+    /* MAIN LAYOUT */
+    main { flex: 1; padding: 2.5rem 5vw; }
+    .profile-grid { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; animation: fadeUp 0.4s ease both; }
+
+    .card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .card-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 1rem; }
+    .card:last-child { margin-bottom: 0; }
+
+    .desc-text { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+    .cause-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .cause-tag { background: rgba(45,106,79,0.08); color: var(--green); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 100px; }
+
+    .doc-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .doc-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.84rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .doc-row:last-child { border-bottom: none; }
+    .doc-name { color: var(--ink); }
+    .doc-status-ok { font-size: 0.72rem; font-weight: 600; color: var(--green); background: rgba(45,106,79,0.08); padding: 0.18rem 0.6rem; border-radius: 100px; }
+
+    /* NEEDS */
+    .needs-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .need-item { background: var(--cream); border: 1.5px solid var(--border); border-radius: 12px; padding: 1rem 1.2rem; }
+    .ni-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; }
+    .ni-title { font-size: 0.9rem; font-weight: 600; }
+    .ni-amount { font-size: 0.82rem; font-weight: 600; color: var(--green); }
+    .ni-meta { font-size: 0.78rem; color: var(--muted); }
+
+    /* SIDEBAR DONATE */
+    .donate-card { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.5rem; position: sticky; top: 80px; }
+    .dc-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1.2rem; }
+
+    .amount-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .amt-btn { padding: 0.6rem; border-radius: 10px; border: 1.5px solid var(--border); background: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.18s; }
+    .amt-btn:hover { border-color: var(--green); color: var(--green); }
+    .amt-btn.selected { background: var(--green); border-color: var(--green); color: #fff; }
+
+    .custom-amount { width: 100%; padding: 0.75rem 1rem; border-radius: 10px; border: 1.5px solid var(--border); background: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--ink); outline: none; transition: border-color 0.2s, box-shadow 0.2s; margin-bottom: 1rem; }
+    .custom-amount:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(45,106,79,0.1); }
+
+    .anon-toggle { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.2rem; cursor: pointer; }
+    .toggle-switch { width: 40px; height: 22px; border-radius: 100px; background: var(--border); position: relative; transition: background 0.2s; flex-shrink: 0; }
+    .toggle-switch.on { background: var(--green); }
+    .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
+    .toggle-switch.on::after { transform: translateX(18px); }
+    .toggle-label { font-size: 0.83rem; color: var(--muted); }
+
+    .donate-btn { width: 100%; padding: 0.9rem; border-radius: 100px; font-size: 0.9rem; font-weight: 500; font-family: 'DM Sans', sans-serif; border: none; cursor: pointer; background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(200,98,42,0.25); transition: opacity 0.2s, transform 0.15s; }
+    .donate-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .donate-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .dc-note { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.85rem; line-height: 1.5; }
+
+    /* PAYMENT OVERLAY */
+    .overlay { position: fixed; inset: 0; background: rgba(14,14,14,0.5); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .overlay.show { display: flex; }
+    .pay-modal { background: var(--card-bg); border-radius: 20px; padding: 2.5rem; max-width: 400px; width: 90%; text-align: center; animation: fadeUp 0.35s ease both; }
+    .pay-processing { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .pay-success { display: none; flex-direction: column; align-items: center; gap: 1rem; }
+    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(45,106,79,0.1); display: flex; align-items: center; justify-content: center; }
+    .pay-modal-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
+    .pay-modal-sub { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .pay-close { margin-top: 0.5rem; padding: 0.75rem 2rem; border-radius: 100px; background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+    .pay-close:hover { opacity: 0.88; }
+
+    footer { background: var(--ink); color: rgba(245,240,232,0.4); padding: 1.5rem 5vw; display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; flex-wrap: wrap; gap: 0.5rem; }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--cream); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+
+    @media (max-width: 800px) { .profile-grid { grid-template-columns: 1fr; } .donate-card { position: static; } .ph-inner { flex-direction: column; gap: 1.2rem; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Bridge<span>Connect</span></a>
+    <a href="ngo-list.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      All NGOs
+    </a>
+  </nav>
+
+  <div class="profile-hero">
+    <div class="ph-inner">
+      <div class="ph-initials" id="heroInitials">UN</div>
+      <div class="ph-info">
+        <div class="ph-badges">
+          <span class="ph-badge ph-badge-green">Government Verified</span>
+          <span class="ph-badge ph-badge-orange">80G Tax Benefit</span>
+        </div>
+        <div class="ph-name" id="heroName">NGO Name</div>
+        <div class="ph-location" id="heroLocation">City, State</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="profile-grid">
+      <div>
+        <div class="card">
+          <div class="card-title">About</div>
+          <div class="desc-text" id="ngoDesc">—</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Cause Areas</div>
+          <div class="cause-tags" id="ngoCauses"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Verified Documents</div>
+          <div class="doc-list">
+            <div class="doc-row"><span class="doc-name">Registration Certificate</span><span class="doc-status-ok">Verified</span></div>
+            <div class="doc-row"><span class="doc-name">80G Certificate</span><span class="doc-status-ok">Verified</span></div>
+            <div class="doc-row"><span class="doc-name">12A Certificate</span><span class="doc-status-ok">Verified</span></div>
+            <div class="doc-row"><span class="doc-name">PAN Card</span><span class="doc-status-ok">Verified</span></div>
+            <div class="doc-row"><span class="doc-name">Representative ID Proof</span><span class="doc-status-ok">Verified</span></div>
+          </div>
+        </div>
+        <div class="card" id="needsCard">
+          <div class="card-title">Current Needs</div>
+          <div class="needs-list" id="needsList">
+            <div style="font-size:0.84rem;color:var(--muted);">No active needs posted.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="donate-card">
+          <div class="dc-title">Make a Donation</div>
+
+          <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Select Amount</div>
+          <div class="amount-grid">
+            <button class="amt-btn" onclick="selectAmt(500, this)">₹500</button>
+            <button class="amt-btn selected" onclick="selectAmt(1000, this)">₹1,000</button>
+            <button class="amt-btn" onclick="selectAmt(2500, this)">₹2,500</button>
+            <button class="amt-btn" onclick="selectAmt(5000, this)">₹5,000</button>
+            <button class="amt-btn" onclick="selectAmt(10000, this)">₹10,000</button>
+            <button class="amt-btn" onclick="selectAmt(0, this)">Other</button>
+          </div>
+
+          <input class="custom-amount" type="number" id="customAmt" placeholder="Enter custom amount (₹)" oninput="onCustomInput()" />
+
+          <div class="anon-toggle" onclick="toggleAnon()">
+            <div class="toggle-switch" id="anonToggle"></div>
+            <div class="toggle-label">Donate anonymously</div>
+          </div>
+
+          <button class="donate-btn" id="donateBtn" onclick="initPayment()">Donate ₹1,000</button>
+          <div class="dc-note">Secured payment. You will receive an 80G receipt after donation.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- PAYMENT OVERLAY -->
+  <div class="overlay" id="payOverlay">
+    <div class="pay-modal">
+      <div class="pay-processing" id="payProcessing">
+        <div class="spinner"></div>
+        <div class="pay-modal-title">Processing Payment</div>
+        <div class="pay-modal-sub">Please wait while we process your donation...</div>
+      </div>
+      <div class="pay-success" id="paySuccess">
+        <div class="success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="pay-modal-title">Donation Successful</div>
+        <div class="pay-modal-sub" id="successMsg">Your donation has been recorded. An 80G receipt will be sent to your email.</div>
+        <button class="pay-close" onclick="closePayment()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <a href="index.html" class="footer-logo">Bridge<span>Connect</span></a>
+    <div>© 2025 BridgeConnect. All rights reserved.</div>
+    <div>Built for India's giving ecosystem</div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email');
+
+    function getSeedNGOs() {
+      return [
+        { name:'Udayan Care', city:'Delhi', state:'Delhi', cause:['Child Welfare','Education'], description:'Providing quality education and family-based care for children in need across India. Udayan Care runs group homes, scholarships, and mentoring programmes for children who have experienced neglect or loss of parental care.', status:'approved', email:'udayan@example.org' },
+        { name:'Akshaya Patra', city:'Bengaluru', state:'Karnataka', cause:['Education','Healthcare'], description:'Mid-day meal programme reaching over 2 million children in government schools every day, fighting hunger and promoting school attendance simultaneously.', status:'approved', email:'akshaya@example.org' },
+        { name:'Goonj', city:'Delhi', state:'Delhi', cause:['Rural Development','Women Empowerment'], description:'Addressing clothing as a basic unmet need while using urban surplus as a development resource in rural and disaster-affected communities.', status:'approved', email:'goonj@example.org' },
+        { name:'CRY India', city:'Mumbai', state:'Maharashtra', cause:['Child Welfare'], description:'Working to ensure lasting change in the lives of underprivileged children across India through rights-based development programmes.', status:'approved', email:'cry@example.org' },
+        { name:'Smile Foundation', city:'Delhi', state:'Delhi', cause:['Education','Healthcare'], description:'Empowering underprivileged children, women, and communities through education, healthcare and livelihood programmes across 25 states.', status:'approved', email:'smile@example.org' },
+        { name:'Teach For India', city:'Mumbai', state:'Maharashtra', cause:['Education'], description:'Building a movement of leaders committed to ending educational inequity in India by placing talented graduates in under-resourced schools.', status:'approved', email:'tfi@example.org' },
+        { name:'Sammaan Foundation', city:'Pune', state:'Maharashtra', cause:['Women Empowerment','Rural Development'], description:'Empowering marginalised women through skill development, financial literacy and entrepreneurship programmes in rural Maharashtra.', status:'approved', email:'sammaan@example.org' },
+        { name:'Wildlife SOS', city:'Agra', state:'Uttar Pradesh', cause:['Environment'], description:"Dedicated to protecting India's wildlife and natural heritage through conservation, rescue, and rehabilitation of animals in distress.", status:'approved', email:'wildlifesos@example.org' },
+        { name:'iCall', city:'Mumbai', state:'Maharashtra', cause:['Healthcare'], description:'Providing accessible and affordable mental health services and psychosocial support to individuals and communities across India.', status:'approved', email:'icall@example.org' },
+      ];
+    }
+
+    const stored = JSON.parse(localStorage.getItem('bc_ngos') || '[]');
+    const all = [...getSeedNGOs(), ...stored];
+    const ngo = all.find(n => n.email === email) || all[0];
+
+    function getInitials(name) { return (name || '').split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase(); }
+
+    document.getElementById('heroInitials').textContent = getInitials(ngo.name);
+    document.getElementById('heroName').textContent = ngo.name;
+    document.getElementById('heroLocation').textContent = `${ngo.city}, ${ngo.state}`;
+    document.getElementById('ngoDesc').textContent = ngo.description;
+    document.getElementById('ngoCauses').innerHTML = (ngo.cause || []).map(c => `<span class="cause-tag">${c}</span>`).join('');
+    document.title = `${ngo.name} — BridgeConnect`;
+
+    // Needs
+    const needs = JSON.parse(localStorage.getItem('bc_needs_' + ngo.email) || '[]');
+    if (needs.length > 0) {
+      document.getElementById('needsList').innerHTML = needs.map(n => `
+        <div class="need-item">
+          <div class="ni-header">
+            <div class="ni-title">${n.title}</div>
+            ${n.amount ? `<div class="ni-amount">₹${Number(n.amount).toLocaleString('en-IN')}</div>` : ''}
+          </div>
+          <div class="ni-meta">${n.type}${n.desc ? ' · ' + n.desc : ''}</div>
+        </div>`).join('');
+    }
+
+    // Donation widget
+    let selectedAmt = 1000;
+    let anonymous = false;
+
+    function selectAmt(amt, btn) {
+      selectedAmt = amt;
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('customAmt').value = '';
+      if (amt > 0) document.getElementById('donateBtn').textContent = `Donate ₹${amt.toLocaleString('en-IN')}`;
+      else { document.getElementById('customAmt').focus(); document.getElementById('donateBtn').textContent = 'Donate'; }
+    }
+
+    function onCustomInput() {
+      const v = Number(document.getElementById('customAmt').value);
+      selectedAmt = v;
+      document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('selected'));
+      document.getElementById('donateBtn').textContent = v > 0 ? `Donate ₹${v.toLocaleString('en-IN')}` : 'Donate';
+    }
+
+    function toggleAnon() {
+      anonymous = !anonymous;
+      document.getElementById('anonToggle').classList.toggle('on', anonymous);
+    }
+
+    function initPayment() {
+      const amt = selectedAmt || Number(document.getElementById('customAmt').value);
+      if (!amt || amt < 10) { alert('Please enter a valid donation amount (min ₹10).'); return; }
+
+      const auth = JSON.parse(localStorage.getItem('bc_auth') || 'null');
+      if (!auth || auth.type !== 'donor') {
+        if (confirm('You need to be logged in to donate. Go to login?')) window.location.href = 'donor-login.html';
+        return;
+      }
+
+      document.getElementById('payOverlay').classList.add('show');
+      document.getElementById('payProcessing').style.display = 'flex';
+      document.getElementById('paySuccess').style.display = 'none';
+
+      setTimeout(() => {
+        // Save donation
+        const donations = JSON.parse(localStorage.getItem('bc_donations') || '[]');
+        donations.push({
+          donorEmail: auth.email,
+          donorName: auth.name,
+          ngoName: ngo.name,
+          cause: (ngo.cause || [])[0] || 'General',
+          amount: amt,
+          anonymous,
+          type: 'One-time',
+          date: new Date().toISOString(),
+          paymentId: 'PAY' + Date.now()
+        });
+        localStorage.setItem('bc_donations', JSON.stringify(donations));
+
+        document.getElementById('payProcessing').style.display = 'none';
+        document.getElementById('paySuccess').style.display = 'flex';
+        document.getElementById('successMsg').textContent = `₹${amt.toLocaleString('en-IN')} donated to ${ngo.name}. An 80G receipt will be sent to your email.`;
+      }, 2200);
+    }
+
+    function closePayment() {
+      document.getElementById('payOverlay').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

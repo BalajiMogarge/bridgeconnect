@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Admin Setup — BridgeConnect</title>
+  <style>
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family: monospace; background:#0d0d0d; color:#e0e0e0; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .box { background:#151515; border:1px solid #252525; border-radius:16px; padding:2.5rem; max-width:480px; width:90%; }
+    h2 { font-size:1.2rem; margin-bottom:0.5rem; color:#fff; }
+    p { font-size:0.82rem; color:#666; line-height:1.6; margin-bottom:1.5rem; }
+    .field { margin-bottom:1rem; }
+    label { font-size:0.72rem; color:#555; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:0.4rem; }
+    input { width:100%; background:#0d0d0d; border:1px solid #252525; border-radius:8px; padding:0.7rem 1rem; font-family:monospace; font-size:0.9rem; color:#e0e0e0; outline:none; }
+    input:focus { border-color:#c8622a; }
+    button { width:100%; padding:0.8rem; background:#c8622a; color:#fff; border:none; border-radius:100px; font-family:monospace; font-size:0.9rem; cursor:pointer; margin-top:0.5rem; }
+    button:hover { opacity:0.88; }
+    #log { margin-top:1.5rem; font-size:0.8rem; line-height:2; }
+    .ok  { color:#52b788; }
+    .err { color:#f87171; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>BridgeConnect Admin Setup</h2>
+    <p>Run this page once to create the admin account. Delete it afterwards.</p>
+    <div class="field"><label>Admin Email</label><input id="email" value="mogargebalaji42@gmail.com"/></div>
+    <div class="field"><label>Admin Password</label><input id="pass" type="password" placeholder="Choose a strong password"/></div>
+    <button onclick="setup()">Create Admin Account</button>
+    <div id="log"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const app  = initializeApp({ apiKey:"AIzaSyBD5RY0C6sNtECrPAdris3Bk2a-zkywjwg", authDomain:"bridgeconnect-df65b.firebaseapp.com", projectId:"bridgeconnect-df65b", storageBucket:"bridgeconnect-df65b.firebasestorage.app", messagingSenderId:"141713664963", appId:"1:141713664963:web:a13d8df1ec7daf0e6a6b76" });
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    function log(msg, err) {
+      document.getElementById('log').innerHTML += `<div class="${err?'err':'ok'}">${msg}</div>`;
+    }
+
+    window.setup = async function() {
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('pass').value;
+      if (!pass || pass.length < 6) { log('Password must be at least 6 characters.', true); return; }
+      try {
+        log('Creating auth account...');
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        log('Auth created: ' + cred.user.uid);
+        await setDoc(doc(db, 'users', cred.user.uid), { role:'admin', email, name:'Admin', createdAt: new Date().toISOString() });
+        log('Firestore record written.');
+        log('Done! Admin account ready. Delete this file now.');
+      } catch(e) {
+        if (e.code === 'auth/email-already-in-use') {
+          log('Email already registered. If you cannot log in, check the Firestore users collection and make sure your UID has role:"admin".', true);
+        } else {
+          log('Error: ' + e.message, true);
+        }
+      }
+    };
+  </script>
+</body>
+</html>
